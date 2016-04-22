@@ -1,5 +1,4 @@
 require "signet/oauth_1/client"
-require "curb-fu"
 require "json"
 require "ext/hash"
 require "pp" # for debug
@@ -49,46 +48,32 @@ module MaxCDN
       request = @request_signer.generate_authenticated_request(req_opts)
 
       # crazyness for headers
-      headers = options.delete(:headers) || {}
+      headers = {"Content-Type" => options[:body] ? "application/json" : "application/x-www-form-urlencoded"}
+      headers.case_indifferent_merge(options.delete(:headers) || {})
       headers["User-Agent"] = "Ruby MaxCDN API Client"
-
-      # because CurbFu overwrites 'content-type' header, strip it
-      # to set it later
-      content_type = headers.case_indifferent_delete("Content-Type") || (options[:body] ? "application/json" : "application/x-www-form-urlencoded")
 
       # merge headers with request headers
       request.headers.case_indifferent_merge(headers)
 
       begin
-        curb_opts = {
-          :url => req_opts[:uri],
-          :headers => request.headers
-        }
+        url, path = req_opts[:uri].match(%r"^(https://[^/]+)(/.+)$")[1, 2]
+        conn = Faraday.new(:url => url) do |faraday|
+          faraday.adapter :net_http_persistent
+        end
 
-        CurbFu.debug = debug
-
-        response = CurbFu.send method, curb_opts, request.body do |curb|
-          curb.verbose = debug
-
-          # Because CurbFu overwrites the content-type header passed
-          # to it. so we'll be setting our own.
-          #
-          # First, remove any existing 'Content-Type' header.
-          curb.headers.case_indifferent_delete("Content-Type")
-
-          # Second, set 'Content-Type' to our desired value.
-          curb.headers["Content-Type"] = content_type
+        response = conn.send(method, path) do |req|
+          req.headers = request.headers
+          req.body = request.body
         end
 
         return response if options[:debug_request]
         pp response if debug
 
         response_json = JSON.load(response.body)
-
         return response_json if options[:debug_json]
         pp response_json if debug
 
-        unless response.success? or response.redirect?
+        unless response.success?
           error_message = response_json["error"]["message"]
           raise MaxCDN::APIException.new("#{response.status}: #{error_message}")
         end

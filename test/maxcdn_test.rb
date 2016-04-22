@@ -15,7 +15,6 @@ expected_headers = {
   'Authorization' => /.+/,
   'Cache-Control' => /.+/,
   'Content-Type'  => "application/json",
-  'Expect'        => /.*/,
   'User-Agent'    => "Ruby MaxCDN API Client"
 }
 
@@ -101,7 +100,7 @@ class Client < Minitest::Test
 
   def test__response_as_json_debug_request
     res = @max._response_as_json("post", "zones/pull.json", { :body => true, :debug_request => true }, { "foo"=> "bar", "bar" => "foo" })
-    assert_equal(CurbFu::Response::Base, res.class)
+    assert_equal(Faraday::Response, res.class)
   end
 
   def test_custom_header
