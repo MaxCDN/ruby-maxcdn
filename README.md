@@ -29,7 +29,7 @@ require 'maxcdn'
 api = MaxCDN::Client.new("myalias", "consumer_key", "consumer_secret")
 
 ####
-# Turn on debugging for underlying Curl::Easy and CurbFu modules
+# Turn on debugging outputs
 #
 # api.debug = true
 
@@ -97,6 +97,15 @@ bundle exec ruby ./test/integration.rb # requires host's IP be whitelisted
 ```
 
 # Change Log
+
+##### 0.3.0
+
+* Replace CurbFu with Faraday (#10).
+
+##### 0.2.1
+
+* Upgrade signet gem to allow for use with the faraday 0.9.x series (#7).
+* See https://rubygems.org/gems/maxcdn/versions/0.2.1 for gem.
 
 ##### 0.1.5
 
