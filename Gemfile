@@ -9,4 +9,3 @@ group :development, :test do
   gem "minitest-reporters"
   gem "webmock"
 end
-

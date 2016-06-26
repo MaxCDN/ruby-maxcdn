@@ -8,6 +8,7 @@ Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
 
 require "webmock"
 include WebMock::API
+WebMock.enable!
 
 host = "https://rws.maxcdn.com/alias"
 
@@ -138,9 +139,6 @@ class Client < Minitest::Test
 
   def test_purge_files
     assert_equal({"foo.txt"=>{"foo"=>"bar"}, "bar.txt"=>{"foo"=>"bar"}}, @max.purge(12345, [ "foo.txt", "bar.txt" ]))
-  end
-
-  def test_purge_files
     assert_equal({"foo.txt"=>{"foo"=>"bar"}, "bar.txt"=>{"foo"=>"bar"}}, @max.purge(12345, { :files => [ "foo.txt", "bar.txt" ]}))
   end
 end
