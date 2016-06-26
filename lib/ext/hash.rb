@@ -1,3 +1,5 @@
+require 'uri'
+
 class Hash
   RESERVED_CHARACTERS = /[^a-zA-Z0-9\-\.\_\~]/
 
