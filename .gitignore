@@ -18,3 +18,7 @@ pkg
 *.lock
 .DS_Store
 npm-debug.log
+
+# other
+*.env
+.vendor/
