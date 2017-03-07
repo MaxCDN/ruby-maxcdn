@@ -4,7 +4,7 @@ require "ext/hash"
 require "pp" # for debug
 
 module MaxCDN
-  class APIException < Exception
+  class APIException < StandardError
   end
 
   class Client
