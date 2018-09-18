@@ -74,7 +74,7 @@ module MaxCDN
           error_message = response_json["error"]["message"]
           raise MaxCDN::APIException.new("#{response.status}: #{error_message}")
         end
-      rescue TypeError
+      rescue TypeError, NoMethodError
         raise MaxCDN::APIException.new("#{response.status}: No information supplied by the server")
       end
 
