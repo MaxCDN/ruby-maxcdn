@@ -36,8 +36,12 @@ module MaxCDN
 
       req_opts = { method: method }
 
+      if data.class == Hash
+        data = data.to_params
+      end
+      
       req_opts[:uri]  = _get_url(uri, (options[:body] ? {} : data))
-      req_opts[:body] = data.to_params if options[:body]
+      req_opts[:body] = data if options[:body]
 
       request = @request_signer.generate_authenticated_request(req_opts)
 
