@@ -1,3 +1,4 @@
+require "base64"
 require "signet/oauth_1/client"
 require "json"
 require "ext/hash"

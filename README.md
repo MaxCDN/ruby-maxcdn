@@ -83,7 +83,7 @@ cd ruby-maxcdn
 bundle install --path vendor/bundle
 
 # unit tests
-bundle exec ruby ./test/test.rb
+bundle exec ruby ./test/maxcdn_test.rb
 
 # integration tests
 export ALIAS=<your alias>
